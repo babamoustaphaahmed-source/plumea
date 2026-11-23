@@ -1,12 +1,32 @@
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import '../../features/auth/login_screen.dart';
 import '../../features/auth/register_screen.dart';
+import '../../features/profile/profile_screen.dart';
+import '../../services/auth_service.dart';
 import '../widgets/main_shell.dart';
 import '../widgets/placeholder_screen.dart';
+import 'auth_refresh.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/inscription',
+  initialLocation: '/',
+  refreshListenable: AuthRefreshNotifier(
+    AuthService.instance.authStateChanges,
+  ),
+  redirect: (context, state) {
+    final connecte = AuthService.instance.currentSession != null;
+    final chemin = state.matchedLocation;
+    final surPageAuth = chemin == '/connexion' || chemin == '/inscription';
+
+    if (!connecte && !surPageAuth) return '/connexion';
+    if (connecte && surPageAuth) return '/';
+    return null;
+  },
   routes: [
+    GoRoute(
+      path: '/connexion',
+      builder: (context, state) => const LoginScreen(),
+    ),
     GoRoute(
       path: '/inscription',
       builder: (context, state) => const RegisterScreen(),
@@ -52,10 +72,7 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/profil',
-              builder: (context, state) => const PlaceholderScreen(
-                title: 'Profil',
-                icon: Icons.person,
-              ),
+              builder: (context, state) => const ProfileScreen(),
             ),
           ],
         ),

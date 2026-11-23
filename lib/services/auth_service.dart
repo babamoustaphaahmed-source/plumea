@@ -9,6 +9,12 @@ class AuthService {
 
   SupabaseClient get _client => Supabase.instance.client;
 
+  Session? get currentSession => _client.auth.currentSession;
+
+  User? get currentUser => _client.auth.currentUser;
+
+  Stream<AuthState> get authStateChanges => _client.auth.onAuthStateChange;
+
   Future<void> signUp({
     required String nom,
     required String email,
