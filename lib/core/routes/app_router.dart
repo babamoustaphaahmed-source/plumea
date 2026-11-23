@@ -1,11 +1,16 @@
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import '../../features/auth/register_screen.dart';
 import '../widgets/main_shell.dart';
 import '../widgets/placeholder_screen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/inscription',
   routes: [
+    GoRoute(
+      path: '/inscription',
+      builder: (context, state) => const RegisterScreen(),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>
           MainShell(navigationShell: navigationShell),
