@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/auth/register_screen.dart';
+import '../../features/profile/edit_profile_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../services/auth_service.dart';
 import '../widgets/main_shell.dart';
@@ -30,6 +31,12 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/inscription',
       builder: (context, state) => const RegisterScreen(),
+    ),
+    GoRoute(
+      path: '/modifier-profil',
+      builder: (context, state) => EditProfileScreen(
+        profile: (state.extra as Map<String, dynamic>?) ?? {},
+      ),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>

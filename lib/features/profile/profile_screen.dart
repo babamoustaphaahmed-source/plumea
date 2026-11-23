@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../services/auth_service.dart';
@@ -10,7 +11,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late final Future<Map<String, dynamic>> _profile;
+  late Future<Map<String, dynamic>> _profile;
 
   @override
   void initState() {
@@ -29,6 +30,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .eq('id', user.id)
         .single();
     return data;
+  }
+
+  Future<void> _edit(Map<String, dynamic> profile) async {
+    final updated = await context.push<bool>(
+      '/modifier-profil',
+      extra: profile,
+    );
+    if (updated == true && mounted) {
+      setState(() => _profile = _loadProfile());
+    }
   }
 
   String _capitalize(String text) {
@@ -53,6 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
           final profile = snapshot.data!;
+          final bio = (profile['bio'] as String?) ?? '';
           return ListView(
             padding: const EdgeInsets.all(24),
             children: [
@@ -73,7 +85,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: const Text('Rôle'),
                 subtitle: Text(_capitalize(profile['role'] as String)),
               ),
+              ListTile(
+                leading: const Icon(Icons.notes_outlined),
+                title: const Text('Biographie'),
+                subtitle: Text(bio.isEmpty ? 'Non renseignée' : bio),
+              ),
               const SizedBox(height: 24),
+              OutlinedButton.icon(
+                onPressed: () => _edit(profile),
+                icon: const Icon(Icons.edit_outlined),
+                label: const Text('Modifier le profil'),
+              ),
+              const SizedBox(height: 12),
               FilledButton.tonal(
                 onPressed: () => AuthService.instance.signOut(),
                 child: const Text('Se déconnecter'),
