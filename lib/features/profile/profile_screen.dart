@@ -33,11 +33,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _edit(Map<String, dynamic> profile) async {
-    final updated = await context.push<bool>(
-      '/modifier-profil',
-      extra: profile,
-    );
-    if (updated == true && mounted) {
+    await context.push<bool>('/modifier-profil', extra: profile);
+    if (mounted) {
       setState(() => _profile = _loadProfile());
     }
   }
@@ -65,10 +62,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
           final profile = snapshot.data!;
           final bio = (profile['bio'] as String?) ?? '';
+          final photoUrl = profile['photo_url'] as String?;
           return ListView(
             padding: const EdgeInsets.all(24),
             children: [
-              const Icon(Icons.account_circle, size: 96),
+              Center(
+                child: CircleAvatar(
+                  radius: 56,
+                  backgroundImage:
+                  photoUrl != null ? NetworkImage(photoUrl) : null,
+                  child: photoUrl == null
+                      ? const Icon(Icons.person, size: 56)
+                      : null,
+                ),
+              ),
               const SizedBox(height: 16),
               ListTile(
                 leading: const Icon(Icons.person_outline),
