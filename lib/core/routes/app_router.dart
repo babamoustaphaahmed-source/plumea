@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/auth/register_screen.dart';
+import '../../features/author/publish_screen.dart';
 import '../../features/profile/edit_profile_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../services/auth_service.dart';
@@ -37,6 +38,10 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => EditProfileScreen(
         profile: (state.extra as Map<String, dynamic>?) ?? {},
       ),
+    ),
+    GoRoute(
+      path: '/publier',
+      builder: (context, state) => const PublishWorkScreen(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>

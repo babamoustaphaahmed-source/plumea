@@ -63,6 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           final profile = snapshot.data!;
           final bio = (profile['bio'] as String?) ?? '';
           final photoUrl = profile['photo_url'] as String?;
+          final estAuteur = profile['role'] == 'auteur';
           return ListView(
             padding: const EdgeInsets.all(24),
             children: [
@@ -98,6 +99,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 subtitle: Text(bio.isEmpty ? 'Non renseignée' : bio),
               ),
               const SizedBox(height: 24),
+              if (estAuteur) ...[
+                FilledButton.icon(
+                  onPressed: () => context.push('/publier'),
+                  icon: const Icon(Icons.upload_file),
+                  label: const Text('Publier une œuvre'),
+                ),
+                const SizedBox(height: 12),
+              ],
               OutlinedButton.icon(
                 onPressed: () => _edit(profile),
                 icon: const Icon(Icons.edit_outlined),
